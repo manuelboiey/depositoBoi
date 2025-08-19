@@ -24,12 +24,11 @@ daily_mean = df.groupby("Date")[target_col].transform("mean")
 # 3. Create binary label: 1 = good (<= mean), 0 = bad (> mean)
 df["label"] = np.where(df[target_col] <= daily_mean, 1, 0)
 
-# 4. Define features (exclude date, label, and target column)
-X = df.drop(columns=["Date", "Time", "label"])
-X = X.select_dtypes(include=[np.number])  # Keep only numeric columns
+# 4. Define features: use only CO(GT)
+X = df[[target_col]]  # keep only CO(GT) as feature
 y = df["label"]
 
-# Handle missing values by filling with column mean
+# Handle missing values (if any)
 X = X.fillna(X.mean())
 
 # 5. Train-test split
